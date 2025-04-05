@@ -39,12 +39,20 @@ def get_shortlisted_candidates(job_title, min_score):
     tables = cur.fetchall()
     st.write("✅ candidate_data_norm:", tables)
     query = """
-        SELECT distinct c.candidate_name, c.job_title,c.email,c.phone_number,concat(c.education) as education,concat(c.skills) as skills,concat(c.projects) as projects,concat(c.experience) as experience,concat(c.certification) as certification, max(m.match_score) as match_score 
-        FROM candidate_data_norm c
-        JOIN match_scores m ON c.email = m.email
-        WHERE m.job_title = ? AND m.match_score >= ? and  c.experience  GLOB '*[A-Za-z]*'
-        group by c.candidate_name, c.job_title,c.email,c.phone_number
-        order by m.match_score desc
+        SELECT DISTINCT c.candidate_name, c.job_title, c.email, c.phone_number,
+           c.education AS education,
+           c.skills AS skills,
+           c.projects AS projects,
+           c.experience AS experience,
+           c.certification AS certification,
+           MAX(m.match_score) AS match_score
+    FROM candidate_data_norm c
+    JOIN match_scores m ON c.email = m.email
+    WHERE m.job_title = ? 
+      AND m.match_score >= ? 
+      AND c.experience GLOB '*[A-Za-z]*'
+    GROUP BY c.candidate_name, c.job_title, c.email, c.phone_number
+    ORDER BY match_score DESC
     """
     df = pd.read_sql_query(query, conn, params=(job_title, min_score))
     conn.close()
