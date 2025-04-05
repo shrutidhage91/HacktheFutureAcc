@@ -32,6 +32,12 @@ def get_shortlisted_candidates(job_title, min_score):
     cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
     tables = cur.fetchall()
     st.write("✅ Tables found in DB:", tables) 
+    cur.execute("SELECT * FROM match_scores limit 5;")
+    tables = cur.fetchall()
+    st.write("✅ match_scores:", tables)
+    cur.execute("SELECT * FROM candidate_data_norm limit 5;")
+    tables = cur.fetchall()
+    st.write("✅ candidate_data_norm:", tables)
     query = """
         SELECT distinct c.candidate_name, c.job_title,c.email,c.phone_number,concat(c.education) as education,concat(c.skills) as skills,concat(c.projects) as projects,concat(c.experience) as experience,concat(c.certification) as certification, max(m.match_score) as match_score 
         FROM candidate_data_norm c
