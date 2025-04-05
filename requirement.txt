@@ -1,0 +1,11 @@
+streamlit
+pandas
+numpy
+PyMuPDF==1.22.5
+openai
+sqlite-utils
+python-dotenv
+requests
+tqdm
+sentence-transformers
+scikit-learn
