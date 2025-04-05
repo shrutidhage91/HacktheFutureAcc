@@ -28,16 +28,6 @@ def get_job_details(job_title):
 
 def get_shortlisted_candidates(job_title, min_score):
     conn = sqlite3.connect("job_screening.db")
-    cur = conn.cursor()
-    cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    tables = cur.fetchall()
-    st.write("✅ Tables found in DB:", tables) 
-    cur.execute("SELECT * FROM match_scores limit 5;")
-    tables = cur.fetchall()
-    st.write("✅ match_scores:", tables)
-    cur.execute("SELECT * FROM candidate_data_norm limit 5;")
-    tables = cur.fetchall()
-    st.write("✅ candidate_data_norm:", tables)
     query = """
         SELECT DISTINCT c.candidate_name, c.job_title, c.email, c.phone_number,
            c.education AS education,
