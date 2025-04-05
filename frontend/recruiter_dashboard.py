@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import sys
 import os
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 if parent_dir not in sys.path:
@@ -27,6 +28,10 @@ def get_job_details(job_title):
 
 def get_shortlisted_candidates(job_title, min_score):
     conn = sqlite3.connect("job_screening.db")
+    cur = conn.cursor()
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = cur.fetchall()
+    st.write("✅ Tables found in DB:", tables) 
     query = """
         SELECT distinct c.candidate_name, c.job_title,c.email,c.phone_number,concat(c.education) as education,concat(c.skills) as skills,concat(c.projects) as projects,concat(c.experience) as experience,concat(c.certification) as certification, max(m.match_score) as match_score 
         FROM candidate_data_norm c
@@ -89,6 +94,7 @@ if selected_job:
     # Shortlisting candidates
     st.subheader("Shortlisted Candidates")
     min_match_score = st.slider("Minimum Match Score", 0.0, 1.0, 0.7)
+    
     shortlisted_df = get_shortlisted_candidates(selected_job, min_match_score)
     #shortlisted_df = pd.dataframe(shortlisted_df)
     if not shortlisted_df.empty:
